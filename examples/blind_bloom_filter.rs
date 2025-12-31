@@ -40,9 +40,11 @@ impl BloomFilter {
 
         // Fixed example coefficients for hash functions (could be randomized in real system for better security)
         let mut coefficients = [
-            (1, 3, 2), (5, 7, 1), (11, 7, 5), (2, 2, 2),
-            (3, 5, 7), (2, 3, 5), (2, 5, 2), (2, 7, 7),
-            (2, 11, 2), (2, 13, 2)
+            (11, 11), (11, 43), (11, 59), (11, 107), 
+            (43, 43), (43, 59), (43, 107), (59, 59), 
+            (59, 107), (107, 107), (5, 5), (5, 37), 
+            (5, 53), (5, 101), (37, 37), (37, 53), 
+            (37, 101), (53, 53), (53, 101), (101, 101)
         ];
 
         // Generate hash matrices for all hash tables
@@ -52,12 +54,11 @@ impl BloomFilter {
             for i in 0..ctx.full_message_modulus() {
                 let mut row = Vec::new();
 
-                // Each matrix row is a hash function: h(x, y) = a * x + b * y + c (mod modulus)
+                // Each matrix row is a hash function: h(x, y) = a * x + b * y (mod modulus)
                 for j in 0..ctx.full_message_modulus() {
                     row.push(
                         (coefficients[l].0 * i as u64 + 
-                         coefficients[l].1 * j as u64 + 
-                         coefficients[l].2 as u64) % ctx.full_message_modulus() as u64
+                         coefficients[l].1 * j as u64 ) % ctx.full_message_modulus() as u64
                     );
                 }
 
